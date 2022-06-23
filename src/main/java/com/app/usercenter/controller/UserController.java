@@ -62,9 +62,9 @@ import static com.app.usercenter.constant.UserConstant.USER_LOGIN_STATE;
 
     /**
      * 登录
-     * @param userLoginRequest 前端参数
-     * @param httpServletRequest
-     * @return
+     * @param userLoginRequest      前端登录请求实体
+     * @param httpServletRequest    请求
+     * @return                      用户信息
      */
     @PostMapping("/login")
     public BaseResponse<User> userLogin(@RequestBody UserLoginRequest userLoginRequest, HttpServletRequest httpServletRequest) {
@@ -82,6 +82,11 @@ import static com.app.usercenter.constant.UserConstant.USER_LOGIN_STATE;
         return userBaseResponse;
     }
 
+    /**
+     * 注销
+     * @param request    USER_LOGIN_STATE
+     * @return           注销提示
+     */
     @PostMapping("/logout")
     public BaseResponse<Integer> userLogout(HttpServletRequest request) {
         if (request == null) {
@@ -91,6 +96,11 @@ import static com.app.usercenter.constant.UserConstant.USER_LOGIN_STATE;
         return ResultUtils.success(1);
     }
 
+    /**
+     *
+     * @param request  前端传入参数：用户id
+     * @return         用户信息
+     */
     @PostMapping("/current")
     public BaseResponse<User> getCurrentUser(HttpServletRequest request) {
         Object userObj = request.getSession().getAttribute(USER_LOGIN_STATE);
@@ -104,6 +114,12 @@ import static com.app.usercenter.constant.UserConstant.USER_LOGIN_STATE;
         return userBaseResponse;
     }
 
+    /**
+     * 用户列表搜索
+     * @param userName   用户名称
+     * @param request    User对象
+     * @return
+     */
     @GetMapping("/search")
     public BaseResponse<List<User>> searchUser(String userName, HttpServletRequest request) {
         if (!this.isAdmin(request)) {
@@ -118,6 +134,12 @@ import static com.app.usercenter.constant.UserConstant.USER_LOGIN_STATE;
         return ResultUtils.success(safeUserList);
     }
 
+    /**
+     * 删除用户
+     * @param id   用户id
+     * @param request 判断当前登录用户是否为管理员
+     * @return 删除提示
+     */
     @PostMapping("/delete")
     public BaseResponse<Boolean> deleteUser(@RequestBody long id, HttpServletRequest request) {
         if (id <= 0 || !this.isAdmin(request)) {
@@ -130,8 +152,8 @@ import static com.app.usercenter.constant.UserConstant.USER_LOGIN_STATE;
     /**
      * 是否为管理员
      *
-     * @param request
-     * @return
+     * @param request  用户信息
+     * @return         是否为管理员
      */
     private boolean isAdmin(HttpServletRequest request) {
         Object userObject = request.getSession().getAttribute(USER_LOGIN_STATE);
